@@ -6,8 +6,8 @@ import MyHeader from '../components/MyHeader';
 
 export default class AddDueDatesScreen extends React.Component{
 
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state ={
             userId: firebase.auth().currentUser.email,
             DueDate: '',
@@ -27,7 +27,8 @@ export default class AddDueDatesScreen extends React.Component{
             user_id:userId,
             duedate:DueDate,
             submit_time:SubmitTime,
-            task_id:randomRequestId
+            duedate_id:randomRequestId,
+            completed:false
         })
         this.setState({
             DueDate:'',

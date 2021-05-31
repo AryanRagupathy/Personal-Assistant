@@ -5,8 +5,8 @@ import firebase from 'firebase';
 import MyHeader from '../components/MyHeader';
 
 export default class SettingsScreen extends React.Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state = {
             emailId: "",
             firstName: "",

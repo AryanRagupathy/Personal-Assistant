@@ -7,8 +7,8 @@ import { ListItem } from 'react-native-elements';
 
 export default class DueDatesScreen extends React.Component{
 
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state ={
             AllDueDates: [],
             userId: firebase.auth().currentUser.email,
@@ -17,7 +17,7 @@ export default class DueDatesScreen extends React.Component{
     }
 
     getDueDates = () =>{
-        this.requestRef = db.collection("duedates").where('user_id','==',this.state.userId)
+        this.requestRef = db.collection("duedates").where('user_id','==',this.state.userId).where('completed','==',false)
         .onSnapshot((snapshot)=>{
           
             var AllDueDates = snapshot.docs.map(document => document.data());
@@ -37,6 +37,21 @@ export default class DueDatesScreen extends React.Component{
         this.requestRef();
     }
 
+    completeDueDate=(DueDateId)=>{
+        console.log(DueDateId);
+        db.collection('duedates').where('duedate_id','==',DueDateId).get().then()
+        .then((snapshot)=>{
+            
+            snapshot.forEach((document)=> {
+                console.log("document"+document.id);
+                db.collection('duedates').doc(document.id).update({
+                    completed:true
+                })
+            })
+        })       
+       
+    }
+
     keyExtractor=(item,index) => index.toString()
 
     renderItem = ( {item, i} ) =>{
@@ -46,8 +61,10 @@ export default class DueDatesScreen extends React.Component{
                     <ListItem.Title style = {{ color: 'black', fontWeight: 'bold' }}>{item.duedate}</ListItem.Title>
                     <ListItem.Subtitle>{item.submit_time}</ListItem.Subtitle>
                 </ListItem.Content>    
-                <TouchableOpacity style={styles.button}>
-                  <Text style={{color:'#ffff'}}>View</Text>
+                <TouchableOpacity style={styles.button} onPress={()=>{
+                    this.completeDueDate(item.duedate_id)
+            }}>
+                  <Text style={{color:'#ffff'}}>Complete</Text>
                 </TouchableOpacity>        
             </ListItem>
         )

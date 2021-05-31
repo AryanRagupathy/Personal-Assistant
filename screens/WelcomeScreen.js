@@ -17,8 +17,8 @@ import firebase from 'firebase';
 
 
 export default class WelcomeScreen extends Component{
-  constructor(){
-    super();
+  constructor(props){
+    super(props);
     this.state={
       emailId:'',
       password:'',

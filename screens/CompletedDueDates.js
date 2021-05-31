@@ -5,87 +5,87 @@ import firebase from 'firebase';
 import MyHeader from '../components/MyHeader';
 import { ListItem } from 'react-native-elements';
 
-export default class ImportantWorkScreen extends React.Component{
+export default class CompletedDueDates extends React.Component{
 
     constructor(props) {
         super(props);
         this.state ={
-            AllTasks: [],
+            AllDueDates: [],
             userId: firebase.auth().currentUser.email,
-            docId:''
         }
         this.requestRef = null;
     }
 
-    getTasks = () =>{
-        this.requestRef = db.collection("tasks").where('user_id','==',this.state.userId).where('completed','==',false)
+    getDueDates = () =>{
+        this.requestRef = db.collection("duedates").where('user_id','==',this.state.userId).where('completed','==',true)
         .onSnapshot((snapshot)=>{
           
-            var AllTasks = snapshot.docs.map(document => document.data());
-            console.log(AllTasks)
+            var AllDueDates = snapshot.docs.map(document => document.data());
+            console.log(AllDueDates)
             this.setState({
-                AllTasks: AllTasks
+                AllDueDates: AllDueDates
             })
         })
     }
 
+
     componentDidMount() {
-        this.getTasks()
+        this.getDueDates()
     }
 
     componentWillUnmount() {
         this.requestRef();
     }
 
-    keyExtractor=(item,index) => index.toString()
-
-    completeTask=(taskId)=>{
-        console.log(taskId);
-        db.collection('tasks').where('task_id','==',taskId).get().then()
+    clearDueDate=(DueDateId)=>{
+        console.log(DueDateId);
+        db.collection('duedates').where('duedate_id','==',DueDateId).get().then()
         .then((snapshot)=>{
             
             snapshot.forEach((document)=> {
                 console.log("document"+document.id);
-                db.collection('tasks').doc(document.id).update({
-                    completed:true
+                db.collection('duedates').doc(document.id).update({
+                    completed:'cleared'
                 })
             })
         })       
        
     }
 
+    keyExtractor=(item,index) => index.toString()
+
     renderItem = ( {item, i} ) =>{
         return (
-          <ListItem key={i} bottomDivider>
-            <ListItem.Content>
-                <ListItem.Title style = {{ color: 'black', fontWeight: 'bold' }}>{item.task}</ListItem.Title>
-                <ListItem.Subtitle>{item.time}</ListItem.Subtitle>
-            </ListItem.Content>    
-            <TouchableOpacity style={styles.button} onPress={()=>{
-                    this.completeTask(item.task_id)
+            <ListItem key={i} bottomDivider>
+                <ListItem.Content>
+                    <ListItem.Title style = {{ color: 'black', fontWeight: 'bold' }}>{item.duedate}</ListItem.Title>
+                    <ListItem.Subtitle>{item.submit_time}</ListItem.Subtitle>
+                </ListItem.Content>    
+                <TouchableOpacity style={styles.button} onPress={()=>{
+                    this.clearDueDate(item.duedate_id)
             }}>
-              <Text style={{color:'#ffff'}}>Complete</Text>
-            </TouchableOpacity>        
-      </ListItem>
+                  <Text style={{color:'#ffff'}}>Clear</Text>
+                </TouchableOpacity>        
+            </ListItem>
         )
       }
-    
+   
     render(){
         return(
             <View style = {{flex: 1}}>
-               <MyHeader title = "Important Work" navigation = {this.props.navigation}/>
+               <MyHeader title = "Completed Due Dates" navigation = {this.props.navigation}/>
                <View style = {{flex: 1}}>
             {
-                this.state.AllTasks.length === 0
+                this.state.AllDueDates.length === 0
                 ?(
                 <View style = {styles.subContainer}>
-                    <Text style = {{ fontSize: 20}}>List Of All Tasks</Text>
+                    <Text style = {{ fontSize: 20}}>List Of All Due Dates</Text>
                 </View>
                 )
                 :(
                 <FlatList
                     keyExtractor = {this.keyExtractor}
-                    data = {this.state.AllTasks}
+                    data = {this.state.AllDueDates}
                     renderItem = {this.renderItem}
                 />
                 )

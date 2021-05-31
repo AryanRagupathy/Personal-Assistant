@@ -4,6 +4,7 @@ import {WorkAppTabNavigator} from './WorkAppTabNavigator';
 import CustomSideBarMenu from './CustomSideBarMenu';
 import {DueDatesTabNavigator} from './DueDatesTabNavigator';
 import SettingsScreen from '../screens/SettingsScreen';
+import CompletedDueDates from '../screens/CompletedDueDates';
 
 export const AppDrawerNavigator = createDrawerNavigator({
     Home: {
@@ -14,7 +15,10 @@ export const AppDrawerNavigator = createDrawerNavigator({
     },
     Settings: {
         screen: SettingsScreen
-    }
+    },
+    CompletedDueDates: {
+        screen: CompletedDueDates
+    },
     },
     {contentComponent: CustomSideBarMenu},
     {initialRouteName: 'Home'}

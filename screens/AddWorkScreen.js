@@ -6,8 +6,8 @@ import MyHeader from '../components/MyHeader';
 
 export default class AddWorkScreen extends React.Component{
 
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state ={
             userId: firebase.auth().currentUser.email,
             task: '',
@@ -27,7 +27,8 @@ export default class AddWorkScreen extends React.Component{
             user_id:userId,
             task:task,
             time:time,
-            task_id:randomRequestId
+            task_id:randomRequestId,
+            completed:false
         })
         this.setState({
             task:'',
